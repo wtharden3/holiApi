@@ -35,6 +35,7 @@ class Months {
     let match = true;
     switch (match) {
       case this.january[0] === this.monthCode:
+        //create an h2 for this section
         return this.january[1];
       case this.february[0] === this.monthCode:
         return this.february[1];
@@ -141,19 +142,26 @@ holidayGhana21Url()
 
         //return month
         let month = new Months(holidayArray[i].date.datetime.month);
-        console.log('Month of Holiday:', month.compareMonth());
+        //console.log('Month of Holiday:', month.compareMonth());
         //return year
-        console.log('Year of Holiday: ', holidayArray[i].date.datetime.year);
+        //console.log('Year of Holiday: ', holidayArray[i].date.datetime.year);
 
         //descriptors
         //day
-        console.log('Day of Holiday: ', holidayArray[i].date.datetime.day);
+        //console.log('Day of Holiday: ', holidayArray[i].date.datetime.day);
         //description
-        addElement(
+        // addElement(
+        //   month.compareMonth(),
+        //   holidayArray[i].date.datetime.year,
+        //   holidayArray[i].name
+        // );
+        let example = new CreateElements(
+          holidayArray,
           month.compareMonth(),
-          holidayArray[i].date.datetime.year,
+          holidayArray[i].date.datetime.day,
           holidayArray[i].name
         );
+        div.appendChild(example.createDiv());
       }
       //fetch function with addElement(with params);
     });
@@ -176,4 +184,46 @@ function addElement(month, year, holiday) {
   list.appendChild(li);
   console.log('li: ', li);
   li.innerHTML = `${holiday}`;
+
+  /**
+   * for each instance of holiday
+   * check the date
+   * if the month == the innerText of the h2  already exist, do not create element
+   * if the innerText value matches the
+   *
+   * now ch
+   */
 }
+
+class CreateElements {
+  constructor(array, month, year, holiday) {
+    this.array = array; //this will be the holiday array with descriptions
+    this.month = month;
+    this.year = year;
+    this.holiday = holiday;
+  }
+  createH2() {
+    let h2 = document.createElement('h2');
+    if (!h2.innerText) {
+      h2.innerText = this.month;
+    }
+    return h2;
+    //place h2 inside div
+
+    //append div
+  }
+  createDiv() {
+    //I will create this anytime there is a new month
+    let newDiv = document.createElement('div');
+    newDiv.setAttribute('class', 'col-sm-3');
+    newDiv.appendChild(this.createH2());
+    console.log('newDiv in  class on line 211: ', newDiv);
+    return newDiv;
+  }
+  createLi() {
+    let li = document.createElement('li');
+    li.innerText;
+  }
+}
+
+let example = new CreateElements();
