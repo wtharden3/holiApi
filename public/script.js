@@ -7,20 +7,12 @@ const endPoints = {
 const apiBridge = `?api_key=`;
 const apiKey = `45caf7c5ffb5de24c051a1c161f6d126c4a83beb`;
 
-// const months = {
-//   january: 1,
-//   february: 2,
-//   march: 3,
-//   april: 4,
-//   may: 5,
-//   june: 6,
-//   july: 7,
-//   august: 8,
-//   september: 9,
-//   october: 10,
-//   november: 11,
-//   december: 12,
-// };
+//for DOM manipulation
+let submitForHolidaysBtn = document.getElementById('submitForHolidaysBtn');
+let selectForm = document.getElementById('selectForm');
+let countryCode = document.getElementById('countryCode').value;
+let yearSelection = document.getElementById('yearSelection').value;
+let div = document.querySelector('.section__results .row');
 
 //creating the months class to take in the month code from the holidays api
 class Months {
@@ -47,32 +39,23 @@ class Months {
       case this.february[0] === this.monthCode:
         return this.february[1];
       case this.march[0] === this.monthCode:
-        console.log(`the month is ${this.march[1]}`);
-        break;
+        return this.march[1];
       case this.april[0] === this.monthCode:
-        console.log(`the month is ${this.april[1]}`);
-        break;
+        return this.april[1];
       case this.may[0] === this.monthCode:
-        console.log(`the month is ${this.may[1]}`);
-        break;
+        return this.may[1];
       case this.june[0] === this.june:
-        console.log(`the month is ${this.june[1]}`);
-        break;
+        return this.june[1];
       case this.july[0] === this.july:
-        console.log(`the month is ${this.july[1]}`);
-        break;
+        return this.july[1];
       case this.august[0] === this.monthCode:
-        console.log(`the month is ${this.august[1]}`);
-        break;
+        return this.august[1];
       case this.september[0] === this.monthCode:
-        console.log(`the month is ${this.september[1]}`);
-        break;
+        return this.september[1];
       case this.october[0] === this.monthCode:
-        console.log(`the month is ${this.october[1]}`);
-        break;
+        return this.october[1];
       case this.november[0] === this.monthCode:
-        console.log(`the month is ${this.november[1]}`);
-        break;
+        return this.november[1];
       case this.december[0] === this.monthCode:
         return this.december[1];
       default:
@@ -132,10 +115,10 @@ class HolidayEndpoint extends Endpoint {
 
 // holidayUsUrl()
 //   .then(data => {
-//     for (let i = 0; i < data.response.holidays.length; i++) {
-//       console.log(data.response.holidays[i]);
+//     for (let i = 0; i < holidayArray.length; i++) {
+//       console.log(holidayArray[i]);
 //     }
-//   }) //data.response.holidays[0] returns an array and I will need to loop through?
+//   }) //holidayArray[0] returns an array and I will need to loop through?
 //   .catch(err => console.log(err));
 
 // let holidayMexico = new HolidayEndpoint('mx', 2020);
@@ -146,26 +129,51 @@ let holidayGhana21Url = holidayGhana21.setHolidayUrlandFetch();
 
 holidayGhana21Url()
   .then(data => {
+    submitForHolidaysBtn.addEventListener('click', e => {
+      e.preventDefault;
+      console.log(countryCode);
+      console.log(yearSelection);
+      //this is where the fetch function will go
+      const holidayArray = data.response.holidays;
+
+      for (let i = 0; i < holidayArray.length; i++) {
+        console.log(holidayArray[i]);
+
+        //return month
+        let month = new Months(holidayArray[i].date.datetime.month);
+        console.log('Month of Holiday:', month.compareMonth());
+        //return year
+        console.log('Year of Holiday: ', holidayArray[i].date.datetime.year);
+
+        //descriptors
+        //day
+        console.log('Day of Holiday: ', holidayArray[i].date.datetime.day);
+        //description
+        addElement(
+          month.compareMonth(),
+          holidayArray[i].date.datetime.year,
+          holidayArray[i].name
+        );
+      }
+      //fetch function with addElement(with params);
+    });
     console.log(data.response);
-    for (let i = 0; i < data.response.holidays.length; i++) {
-      console.log(data.response.holidays[i]);
-
-      //return month
-      let month = new Months(data.response.holidays[i].date.datetime.month);
-      console.log('Month of Holiday:', month.compareMonth());
-      //return year
-      console.log(
-        'Year of Holiday: ',
-        data.response.holidays[i].date.datetime.year
-      );
-
-      //descriptors
-      //day
-      console.log(
-        'Day of Holiday: ',
-        data.response.holidays[i].date.datetime.day
-      );
-      //description
-    }
-  }) //data.response.holidays[0] returns an array and I will need to loop through?
+  }) //holidayArray[0] returns an array and I will need to loop through?
   .catch(err => console.log(err));
+
+//functional programming below
+
+function addElement(month, year, holiday) {
+  const newDiv = document.createElement('div');
+  newDiv.setAttribute('class', 'col-sm-3');
+  div.appendChild(newDiv);
+  newDiv.innerHTML = `<h2>${month} ${year}</h2> <ul class="vacationList">`;
+  let list = document.querySelector('.vacationList');
+
+  // do this as long as their are holidays
+  let li = document.createElement('li');
+  li.setAttribute('class', 'list-item');
+  list.appendChild(li);
+  console.log('li: ', li);
+  li.innerHTML = `${holiday}`;
+}
