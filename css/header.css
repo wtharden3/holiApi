@@ -1,0 +1,18 @@
+.jumbotron {
+  background-image: url('../assets/img/world_map.jpg');
+  background-size: cover;
+  background-position-y: center;
+  position: relative;
+  /* height: 85vh; */
+}
+.overlay-dark {
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.jumbotron__text-wrapper {
+  position: relative;
+}
