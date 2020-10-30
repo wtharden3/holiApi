@@ -65,12 +65,49 @@ class Months {
       case this.december[0] === this.monthCode:
         return this.december[1];
       default:
-        console.log(`This is not a month`);
+        break;
     }
   }
   setMonthArray() {
     monthArray.push(this.compareMonth());
     return monthArray;
+  }
+}
+
+class CountryCode {
+  constructor(code) {
+    this.code = code;
+    this.gh = ['gh', 'Ghana'];
+    this.mx = ['mx', 'Mexico'];
+    this.ng = ['ng', 'Nigeria'];
+    this.uk = ['uk', 'United Kingdom'];
+    this.ne = ['ne', 'Niger'];
+    this.fr = ['fr', 'France'];
+    this.eg = ['eg', 'Egypt'];
+    this.br = ['br', 'Brazil'];
+  }
+  returnCountry() {
+    let match = true;
+    switch (match) {
+      case this.code === this.gh[0]:
+        return this.gh[1];
+      case this.code === this.mx[0]:
+        return this.mx[1];
+      case this.code === this.ng[0]:
+        return this.ng[1];
+      case this.code === this.uk[0]:
+        return this.uk[1];
+      case this.code === this.ne[0]:
+        return this.ne[1];
+      case this.code === this.fr[0]:
+        return this.fr[1];
+      case this.code === this.eg[0]:
+        return this.eg[1];
+      case this.code === this.br[0]:
+        return this.br[1];
+      default:
+        break;
+    }
   }
 }
 
@@ -127,6 +164,9 @@ submitForHolidaysBtn.addEventListener('click', e => {
   e.preventDefault;
   let countryCode = document.getElementById('countryCode').value;
   let yearSelection = document.getElementById('yearSelection').value;
+  let countryCodeInWords = new CountryCode(countryCode);
+
+  resultsHeader.innerText += ` (${countryCodeInWords.returnCountry()} ${yearSelection})`;
   let countryHolidayEndpoint = new HolidayEndpoint(countryCode, yearSelection);
   let countryHolidays = countryHolidayEndpoint.setHolidayUrlandFetch();
   countryHolidays()
