@@ -48,9 +48,9 @@ class Months {
         return this.april[1];
       case this.may[0] === this.monthCode:
         return this.may[1];
-      case this.june[0] === this.june:
+      case this.june[0] === this.monthCode:
         return this.june[1];
-      case this.july[0] === this.july:
+      case this.july[0] === this.monthCode:
         return this.july[1];
       case this.august[0] === this.monthCode:
         return this.august[1];
@@ -163,13 +163,13 @@ holidayGhana21Url()
         //   holidayArray[i].date.datetime.year,
         //   holidayArray[i].name
         // );
-        let example = new CreateElements(
-          holidayArray,
-          month.compareMonth(),
-          holidayArray[i].date.datetime.day,
-          holidayArray[i].name
-        );
-        div.appendChild(example.createDiv());
+        // let example = new CreateElements(
+        //   holidayArray,
+        //   month.compareMonth(),
+        //   holidayArray[i].date.datetime.day,
+        //   holidayArray[i].name
+        // );
+        //div.appendChild(example.createDiv());
       }
       console.log('final month array: ', monthArray);
       // this is to delete duplicates
@@ -183,12 +183,24 @@ holidayGhana21Url()
         return monthArray.indexOf(item) === index;
       });
       console.log('newMonths: ', newMonths);
-      let theUndefined = newMonths.indexOf(undefined);
-      console.log('theUndefined: ', theUndefined);
-      if (theUndefined > -1) {
-        newMonths.splice(theUndefined, 1);
+      for (month of newMonths) {
+        let h2 = document.createElement('h2');
+        h2.innerText = month;
+        let holidayDivContainer = document.createElement('div');
+        holidayDivContainer.setAttribute('class', 'col-sm-3');
+        let rowDiv = document.querySelector(
+          '.section__results .container .row'
+        );
+        rowDiv.appendChild(holidayDivContainer);
+        holidayDivContainer.appendChild(h2);
+        console.log(h2);
       }
-      console.log('newMonths after splice: ', newMonths);
+      // let theUndefined = newMonths.indexOf(undefined);
+      // console.log('theUndefined: ', theUndefined);
+      // if (theUndefined > -1) {
+      //   newMonths.splice(theUndefined, 1);
+      // }
+      // console.log('newMonths after splice: ', newMonths);
       //I want to use the array above to take out duplicates and take out undefined and create an h2 element that is at the top of the div above the li
       //fetch function with addElement(with params);
     });
@@ -234,24 +246,24 @@ class CreateElements {
   }
   createH2() {
     let h2 = document.createElement('h2');
-    let allH2 = document.querySelectorAll('h2');
+    // let allH2 = document.querySelectorAll('h2');
     console.log('h2.innerHtml: ', h2.innerHTML);
     // allH2.forEach(h => {
     //   console.log('h2 of allH2: ', h);
     // });
     h2.innerText = this.month;
     console.log('h2.innerHtml2: ', h2.innerHTML);
-    console.log('allH2[0]: ', allH2[0]);
+    // console.log('allH2[0]: ', allH2[0]);
     return h2;
     //place h2 inside div
 
     //append div
   }
-  createDiv() {
+  createDiv(el) {
     //I will create this anytime there is a new month
 
-    this.newDiv.appendChild(this.createH2());
-    console.log('newDiv in  class on line 211: ', this.newDiv);
+    this.newDiv.appendChild(el);
+    //console.log('newDiv in  class on line 211: ', this.newDiv);
     return this.newDiv;
   }
   createLi() {
