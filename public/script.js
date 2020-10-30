@@ -14,7 +14,7 @@ let countryCode = document.getElementById('countryCode').value;
 let yearSelection = document.getElementById('yearSelection').value;
 let div = document.querySelector('.section__results .row');
 
-//test
+//using for an array to use for h2's
 let monthArray = [];
 
 //creating the months class to take in the month code from the holidays api
@@ -132,6 +132,7 @@ class HolidayEndpoint extends Endpoint {
 // let holidayMexico = new HolidayEndpoint('mx', 2020);
 // let holidayMexicoUrl = holidayMexico.setHolidayUrlandFetch();
 
+//will need to place this into the submit eventListener function
 let holidayGhana21 = new HolidayEndpoint('gh', 2021);
 let holidayGhana21Url = holidayGhana21.setHolidayUrlandFetch();
 
@@ -145,41 +146,12 @@ holidayGhana21Url()
       const holidayArray = data.response.holidays;
 
       for (let i = 0; i < holidayArray.length; i++) {
-        console.log(holidayArray[i]);
-
-        //return month
         let month = new Months(holidayArray[i].date.datetime.month);
-        console.log('month: ', month.setMonthArray());
-        //console.log('Month of Holiday:', month.compareMonth());
-        //return year
-        //console.log('Year of Holiday: ', holidayArray[i].date.datetime.year);
-
-        //descriptors
-        //day
-        //console.log('Day of Holiday: ', holidayArray[i].date.datetime.day);
-        //description
-        // addElement(
-        //   month.compareMonth(),
-        //   holidayArray[i].date.datetime.year,
-        //   holidayArray[i].name
-        // );
-        // let example = new CreateElements(
-        //   holidayArray,
-        //   month.compareMonth(),
-        //   holidayArray[i].date.datetime.day,
-        //   holidayArray[i].name
-        // );
-        //div.appendChild(example.createDiv());
+        month.setMonthArray();
       }
       console.log('final month array: ', monthArray);
-      // this is to delete duplicates
+      // this is to delete duplicate months so we only print h2's with month one time
       let newMonths = monthArray.filter((item, index) => {
-        console.log(
-          item,
-          index,
-          monthArray.indexOf(item),
-          monthArray.indexOf(item) === index
-        );
         return monthArray.indexOf(item) === index;
       });
       console.log('newMonths: ', newMonths);
@@ -193,16 +165,69 @@ holidayGhana21Url()
         );
         rowDiv.appendChild(holidayDivContainer);
         holidayDivContainer.appendChild(h2);
-        console.log(h2);
+        //console.log(h2);
       }
-      // let theUndefined = newMonths.indexOf(undefined);
-      // console.log('theUndefined: ', theUndefined);
-      // if (theUndefined > -1) {
-      //   newMonths.splice(theUndefined, 1);
-      // }
-      // console.log('newMonths after splice: ', newMonths);
-      //I want to use the array above to take out duplicates and take out undefined and create an h2 element that is at the top of the div above the li
-      //fetch function with addElement(with params);
+
+      //select all the h2s and select all the div Containers
+      let allh2s = document.querySelectorAll('.col-sm-3 h2');
+      let wrappingDivs = document.querySelectorAll('.col-sm-3');
+      console.log('wrappingDivs: ', wrappingDivs);
+
+      // for each div container create an ul element and assign the id to match the h2 above it
+      wrappingDivs.forEach(div => {
+        let ul = document.createElement('ul');
+        ul.setAttribute('class', 'holiday-list');
+        console.log(
+          'div.childNodes[0].innerText: ',
+          div.childNodes[0].innerText
+        );
+        ul.setAttribute('id', div.childNodes[0].innerText);
+        div.appendChild(ul);
+      });
+
+      // console.log('allh2s: ', allh2s);
+
+      // console.log(
+      //   'allh2s.value: ',
+      //   allh2s.forEach(h2 => {
+      //     console.log(h2.innerHTML);
+      //   })
+      // );
+
+      for (let i = 0; i < holidayArray.length; i++) {
+        console.log('holidayArray[i].name: ', holidayArray[i].name);
+
+        //use new Month.compareMonth() for this below to return in words
+        let monthCode = holidayArray[i].date.datetime.month;
+        let whatMonth = new Months(monthCode);
+        console.log('holidayArray[i].date.datetime.month: ', monthCode);
+        console.log('whatMonth.compareMonth(): ', whatMonth.compareMonth());
+        let targetUl = document.getElementById(whatMonth.compareMonth());
+        console.log('targetUl: ', targetUl);
+
+        if (whatMonth.compareMonth()) {
+          console.log('what???? ', whatMonth.compareMonth());
+          let newLi = new CreateElements(
+            holidayArray,
+            whatMonth.compareMonth(),
+            targetUl,
+            `${holidayArray[i].name} <span class="emphasisDay">(${holidayArray[i].date.datetime.day})</span>`
+          );
+          newLi.createLi();
+        }
+
+        //for each instance I want to check to see if there is a
+        //ul with the id that matches the month
+        // and place the list item with innerText = Holiday Name  and day within that ul
+
+        //   let newLis = new CreateElements(
+        //     holidayArray,
+        //     'list-item',
+        //     document.querySelector('.col-sm-3 h'),
+        //     holidayArray[i].name
+        //   );
+        //   newLis.createLi();
+      }
     });
 
     console.log(data.response);
@@ -211,65 +236,68 @@ holidayGhana21Url()
 
 //functional programming below
 
-function addElement(month, year, holiday) {
-  const newDiv = document.createElement('div');
-  newDiv.setAttribute('class', 'col-sm-3');
-  div.appendChild(newDiv);
-  newDiv.innerHTML = `<h2>${month} ${year}</h2> <ul class="vacationList">`;
-  let list = document.querySelector('.vacationList');
+// function addElement(month, year, holiday) {
+//   const newDiv = document.createElement('div');
+//   newDiv.setAttribute('class', 'col-sm-3');
+//   div.appendChild(newDiv);
+//   newDiv.innerHTML = `<h2>${month} ${year}</h2> <ul class="vacationList">`;
+//   let list = document.querySelector('.vacationList');
 
-  // do this as long as their are holidays
-  let li = document.createElement('li');
-  li.setAttribute('class', 'list-item');
-  list.appendChild(li);
-  console.log('li: ', li);
-  li.innerHTML = `${holiday}`;
+//   // do this as long as their are holidays
+//   let li = document.createElement('li');
+//   li.setAttribute('class', 'list-item');
+//   list.appendChild(li);
+//   console.log('li: ', li);
+//   li.innerHTML = `${holiday}`;
 
-  /**
-   * for each instance of holiday
-   * check the date
-   * if the month == the innerText of the h2  already exist, do not create element
-   * if the innerText value matches the
-   *
-   * now ch
-   */
-}
+//   /**
+//    * for each instance of holiday
+//    * check the date
+//    * if the month == the innerText of the h2  already exist, do not create element
+//    * if the innerText value matches the
+//    *
+//    * now ch
+//    */
+// }
 
 class CreateElements {
-  constructor(array, month, year, holiday) {
+  constructor(array, attributeValue, elementToAppend, innerHTML) {
     this.array = array; //this will be the holiday array with descriptions
-    this.month = month;
-    this.year = year;
-    this.holiday = holiday;
-    this.newDiv = document.createElement('div');
-    this.newDiv.setAttribute('class', 'col-sm-3');
-  }
-  createH2() {
-    let h2 = document.createElement('h2');
-    // let allH2 = document.querySelectorAll('h2');
-    console.log('h2.innerHtml: ', h2.innerHTML);
-    // allH2.forEach(h => {
-    //   console.log('h2 of allH2: ', h);
-    // });
-    h2.innerText = this.month;
-    console.log('h2.innerHtml2: ', h2.innerHTML);
-    // console.log('allH2[0]: ', allH2[0]);
-    return h2;
-    //place h2 inside div
-
-    //append div
-  }
-  createDiv(el) {
-    //I will create this anytime there is a new month
-
-    this.newDiv.appendChild(el);
-    //console.log('newDiv in  class on line 211: ', this.newDiv);
-    return this.newDiv;
+    this.attributeValue = attributeValue;
+    this.elementToAppend = elementToAppend;
+    this.innerHTML = innerHTML;
   }
   createLi() {
     let li = document.createElement('li');
-    li.innerText;
+    li.setAttribute('class', this.attributeValue);
+    li.innerHTML = this.innerHTML;
+    this.elementToAppend.appendChild(li);
+    return li;
   }
-}
+  // createH2() {
+  //   let h2 = document.createElement('h2');
 
-let example = new CreateElements();
+  //   console.log('h2.innerHtml: ', h2.innerHTML);
+  //   // allH2.forEach(h => {
+  //   //   console.log('h2 of allH2: ', h);
+  //   // });
+  //   h2.innerText = this.month;
+  //   console.log('h2.innerHtml2: ', h2.innerHTML);
+  //   // console.log('allH2[0]: ', allH2[0]);
+  //   return h2;
+  //   //place h2 inside div
+
+  //   //append div
+  // }
+  // createDiv(el) {
+  //   //I will create this anytime there is a new month
+
+  //   this.newDiv.appendChild(el);
+  //   //console.log('newDiv in  class on line 211: ', this.newDiv);
+  //   return this.newDiv;
+  // }
+  // createLi() {
+  //   let li = document.createElement('li');
+  //   li.innerText;
+  // }
+}
