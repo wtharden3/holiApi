@@ -166,7 +166,9 @@ submitForHolidaysBtn.addEventListener('click', e => {
   let yearSelection = document.getElementById('yearSelection').value;
   let countryCodeInWords = new CountryCode(countryCode);
 
-  resultsHeader.innerText += ` (${countryCodeInWords.returnCountry()} ${yearSelection})`;
+  //changes once button is clicked
+  resultsHeader.innerText = `Holidays (${countryCodeInWords.returnCountry()} ${yearSelection})`;
+
   let countryHolidayEndpoint = new HolidayEndpoint(countryCode, yearSelection);
   let countryHolidays = countryHolidayEndpoint.setHolidayUrlandFetch();
   countryHolidays()
@@ -186,6 +188,8 @@ submitForHolidaysBtn.addEventListener('click', e => {
       console.log('newMonths: ', newMonths);
       for (month of newMonths) {
         let h2 = document.createElement('h2');
+        //this resets the value of h2 before changing the innerText once again
+        //h2.innerText = '';
         h2.innerText = month;
         let holidayDivContainer = document.createElement('div');
         holidayDivContainer.setAttribute('class', 'col-sm-3');
@@ -204,23 +208,24 @@ submitForHolidaysBtn.addEventListener('click', e => {
       // for each div container create an ul element and assign the id to match the h2 above it
       wrappingDivs.forEach(div => {
         let ul = document.createElement('ul');
+        //ul.innerHTML = '';
         ul.setAttribute('class', 'holiday-list');
-        console.log(
-          'div.childNodes[0].innerText: ',
-          div.childNodes[0].innerText
-        );
+        // console.log(
+        //   'div.childNodes[0].innerText: ',
+        //   div.childNodes[0].innerText
+        // );
         ul.setAttribute('id', div.childNodes[0].innerText);
         div.appendChild(ul);
       });
 
       for (let i = 0; i < holidayArray.length; i++) {
-        console.log('holidayArray[i].name: ', holidayArray[i].name);
+        //console.log('holidayArray[i].name: ', holidayArray[i].name);
 
         //use new Month.compareMonth() for this below to return in words
         let monthCode = holidayArray[i].date.datetime.month;
         let whatMonth = new Months(monthCode);
-        console.log('holidayArray[i].date.datetime.month: ', monthCode);
-        console.log('whatMonth.compareMonth(): ', whatMonth.compareMonth());
+        //console.log('holidayArray[i].date.datetime.month: ', monthCode);
+        //console.log('whatMonth.compareMonth(): ', whatMonth.compareMonth());
         let targetUl = document.getElementById(whatMonth.compareMonth());
         console.log('targetUl: ', targetUl);
 
@@ -251,6 +256,7 @@ class CreateElements {
   createLi() {
     let li = document.createElement('li');
     li.setAttribute('class', this.attributeValue);
+    //li.innerHTML = '';
     li.innerHTML = this.innerHTML;
     this.elementToAppend.appendChild(li);
     return li;
